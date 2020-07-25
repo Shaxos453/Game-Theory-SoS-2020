@@ -1,0 +1,1177 @@
+\documentclass[11pt]{article}
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[a4paper, margin = 1in]{geometry}
+\usepackage{istgame}
+\usepackage{dirtytalk}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amsthm}
+\setlength\extrarowheight{2pt}
+
+\title{\huge{\textbf{Game Theory}}\\Midterm Report}
+\author{Shyam Iyer\\Mentored by: Parth Laturia}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem*{remark}{Remark}
+
+\theoremstyle{definition}
+\newtheorem*{definition}{Definition}
+
+\newcommand{\itab}[1]{\hspace{0em}\rlap{#1}}
+\newcommand{\tab}[1]{\hspace{.2\textwidth}\rlap{#1}}
+
+\begin{document}
+
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} 
+
+\center 
+
+\textsc{\LARGE Indian Institute of Technology Bombay}\\[1cm]
+\textsc{\Large Summer of Science}\\[0.5cm] 
+\textsc{\Large Final Report}\\[0.5cm] 
+
+
+\HRule \\[0.6cm]
+{ \huge \bfseries Game Theory}\\[0.4cm]
+\HRule \\[1cm]
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Author:}\\
+Shyam Iyer % Your name
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\emph{Mentor:} \\
+Parth Laturia % Supervisor's Name
+\end{flushright}
+\end{minipage}\\[2cm]
+
+{\large \today}\\[2cm]
+
+\vfill
+
+\includegraphics[scale = 0.2]{iitblogo.png}\\[1cm] 
+\vfill
+
+\end{titlepage}
+
+
+%\begin{abstract}
+%	We start with a look at the general terminology employed in Game Theory starting with Normal Form games and later incorporating information and sequentiality with the Extensive Form representation. We also look at Evolutionary Game Theory and Behavioural Game Theory as branches of the general subject and conclude with an interesting real life example of a 2 player binary decision game with prior discussion between players.
+%\end{abstract}
+
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Introduction}
+
+Myerson defines Game Theory as the study of mathematical models of conflict and cooperation between intelligent rational decision makers. Let us carefully dissect that definition for the sake of easier understanding. 
+
+A Game is any interaction between multiple people in which each person's payoff is affected by the decisions made by others. These games can often be reduced to simple but concise models, and represented mathematically by trees, payoff matrices, and payoffs in the form of algebraic equations. There are two types of games or social situations that exist, namely cooperative and non-cooperative games, both having their own associated strategies. One interesting point to note is that cooperative games can be analysed through the approach of noncooperative game theory, but the converse does not hold. 
+
+A “rational” decision maker is a person who consistently makes decisions that align with his choices and beliefs. Decision makers or the people participating in a game are called the players of that game.
+
+\section{Baby Steps}
+
+Here are some of the first ideas and terminologies that are necessary to skilfully tread the rest of this report and on a wider scale, the world of Game Theory.
+
+\subsection{Representations of a Game Model}
+
+\subsubsection{The Normal Form}
+The Normal Form is a visual description of the game. The normal-form representation of a game includes all perceptible and conceivable strategies, and their corresponding payoffs, for each player.
+Following convention, the leftmost column describes the choices for the first player while the topmost row describes the choices for the second player. Each intersection cell of choices contains the payoffs for each player in the format (x, y) where x is the payoff for player 1 and y is the payoff for player 2.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+1 \textbackslash 2 & L & R \\
+\hline
+A & 1, 1 & 5, 6 \\
+\hline
+B & 4, 3 & 0, 0 \\
+\hline
+\end{tabular}
+\caption{An arbitrary game in normal form.}
+\label{table:normal}
+\end{table}
+
+
+\subsubsection{The Extensive Form}
+The Extensive Form of a game is one represented in the form of a tree, with branches and nodes. Unlike the normal form game which depicts just the payoffs, an extensive for game explicitly depicts a number of key aspects such as the sequencing of players’ possible moves, their choices at every decision point, the information they have about the other players’ decisions when they make a choice and their payoffs for all possible outcomes of a game.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale = 0.09]{extform.png}
+\caption{A game in extensive form. The dashed line represents imperfect information for player 2.}
+\label{fig:extform}
+\end{figure}
+
+\newpage
+
+\subsection{Terminology}
+
+\begin{enumerate}
+\item There is a finite set of players N = \{1, 2, 3 … n\}
+\item Each player i in P has a finite number of \textbf{pure} strategies \\$S_i$ = \{1, 2, 3 … m\}
+\item A \textbf{pure strategy profile} is an n-tuple of strategy choices of all players to one game. \\
+s = ($s_1$, $s_2$, $s_3$, … $s_n$) such that $s_1$ $\in$ $S_1$, $s_2$ $\in$ $S_2$, and so on.
+\item A \textbf{mixed strategy} of a player is a non-negative probability distribution over $S_i$ denoted by $\sigma_i$ such that $\sum\limits_{i = 0}^{m}$ $\sigma_i$ = 1
+\item A \textbf{payoff function} is a function $u_i$: $S_1 \times S_2 \times S_3 \times ... \times S_n \mapsto {\rm I\!R}$
+\item $S_{-i}$ is the pure strategy profile which is an (n-1)-tuple of strategy choices of all players except player i.\\
+$S_{-i} = (s_1, s_2, s_3 ... s_{i-1}, s_{i+1} ... s_n)$
+\item Used while calculating mixed strategies, \textbf{expected utility} $E_u = \sum\limits_{a \in S_i} u_i(a)P(a|S)$ where $P(a|S)$ is the probability assigned to each strategy.
+\end{enumerate}
+
+\subsection{Strategies, Rationality and Payoffs}
+
+\subsubsection{Strategies}
+A strategy is a decision or a choice that a player makes at a stage in the game. Strategies can be subdivided into pure strategies where one choice is definitely made, and mixed strategies where the decision of the player is a probabilistic combination of their pure strategies.
+
+ For example, in the arbitrarily defined game in Table \ref{table:normal}, (A, R) is a valid pure strategy profile, whereas ((2/3, 1/3) , (1/4, 3/4)) is a valid mixed strategy profile where player 1 can choose A with a 2/3 and B with 1/3 probability, and player 2 can choose L with 1/4 and R with 3/4 probability.
+
+\subsubsection{Rationality}
+	A player is said to exhibit rationality when they make decisions that align with their goals and beliefs. It is generally assumed that the person is not an altruist, and that they will rank their choices in the order of decreasing maximum returns and choose only the one that gives maximum benefit. The players seek to maximise their ‘expected utility’ and thus this is called the expected utility maximisation theorem.
+	
+\subsubsection{Payoffs}
+	A payoff is the value associated with the outcome of a game. It is usually represented as a value in a game model, and structured in such a way that it aligns with the player’s rational belief i.e to maximise their payoff. Payoffs are cardinal numbers, in that it is possible to rank them as well as compare their difference in magnitude.
+
+\section{The Prisoner's Dilemma}
+
+The Prisoner’s Dilemma may be regarded as the first stepping stone into game theory since most people (including myself) are exposed to this first and foremost in their foray into Game Theory and I will emulate that in this report. It is a great way to get introduced to some basic concepts that will be elaborated upon later.
+
+Let me present some background for this game. Two criminals involved in a petty crime have been arrested, and the judge is sceptical that they were also the masterminds behind a much larger bank robbery recently. He takes the two of them into separate rooms and gives them a choice, either to remain quiet (Q) or to Snitch (S). If both remain quiet, then they are each sentenced to 1 year in prison for the petty crime. If one remains quiet and the other snitches, the snitch goes scot-free while the other spends 10 years in prison. If both snitch, then they both are sentenced to 3 years in prison each.
+
+The normal form for the Prisoner’s Dilemma is as follows. I have presented the payoffs in negative, with the values corresponding to the years of jail term.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+1 \textbackslash 2 & Q & S \\
+\hline
+Q & -1, -1 & -10, 0 \\
+\hline
+S & 0, -10 & -3, -3 \\
+\hline
+\end{tabular}
+\caption{Prisoner's Dilemma in normal form.}
+\label{table:pd}
+\end{table}
+
+For player 1, we see that in the case that player 2 remains quiet (first column), 1 gets a higher payoff if he chooses to snitch (since 0 $>$ -1). In the case that player 2 decides to snitch (second column), again we notice that 1 is better off snitching than remaining quiet (since -3 $>$ -10). One could say that strategy Q is \textbf{dominated} by the strategy S. Thus we can \textbf{delete} the strategy of remaining quiet for player 1, and conclude that to snitch is player 1’s \textbf{best response}.
+
+	We see that on repeating the analysis for player 2, we get the same result. The players being rational, both playing the game simultaneously, decide that to snitch is their best bet. This is called the \textbf{Nash Equilibrium} for the game, as both are playing their best response to each other.
+	
+	One with a keen eye would ask the question “But isn’t it better off for the both of them to choose Q and go to jail for only one year each?”. Say player 1 chose Q assuming that player 2 would also choose Q. Now it is in player 2’s personal best interest to choose S as that would enable him to get a higher payoff, i.e. to not go to jail at all. It is a brilliant question to ask and unfortunately the only answer is that the rationality of both players drives them to maximise their \textit{individual gains} and thus not care for the overall benefit of the players involved. The outcome for (Q, Q) \textbf{pareto-dominates} the outcome for (S, S).
+	
+\newpage
+
+\section{Getting Started}
+You will notice that I have emboldened a few terms in the previous section dealing with the Prisoner’s Dilemma. These terms are in fact crucial to the study of Game Theory and will be elaborated upon in this section.
+
+\subsection{Dominated Strategy}
+
+\subsubsection*{Strictly Dominated Strategy}
+A strategy $s'_i$ is called a strictly dominated strategy for a player if it does not result in an optimal (high payoff) outcome in any case of the other players’ strategies. Using our terminologies we can craft a mathematical definition.
+
+\begin{definition}
+Player $i$'s strategy $s'_i$ is strictly dominated by the player's strategy $s_i$ if\\ $u_{i}(s_i, S_{-i})$ $>$ $u_{i}(s'_i, S_{-i})$ for all $S_{-i}$
+\end{definition}
+
+\subsubsection*{Weakly Dominated Strategy}
+A strategy $s'_i$ is said to be weakly dominated by another strategy $s_i$ if the expected payoff in at least one case of $s_i$ is greater than or equal to the expected payoff in the same case for strategy $s’_i$.
+
+\begin{definition}
+Player $i$'s strategy $s'_i$ is weakly dominated by the player's strategy $s_i$ if\\ $u_{i}(s_i, S_{-i})$ $\geq$ $u_{i}(s'_i, S_{-i})$ for all $S_{-i}$
+\end{definition}
+
+\subsection{Best Response}
+A best response strategy is somewhat similar to a strictly \textit{dominant} strategy but differs in the sense that it is dependent on the specific beliefs that a player holds that the other player(s) will behave in a certain manner (or $S_{-i}$). It can be defined formally as,
+
+Suppose player i has a belief $S_{-i}$ about the strategies played by the other players. Player i's strategy $s_i \in S_i$ is a best response if $u_{i}(s_i, S_{-i})$ $\geq$ $u_{i}(s'_i, S_{-i})$ for every $s'_i \in S_i$.
+
+Simply put, it is the strategy that will enable the player to receive the payoff from the most desirable outcome for given cases of strategies of the other players.
+
+\subsection{Iterated Deletion of Strictly Dominated Strategies}
+This is the process of deleting strategies that the player knows is strictly dominated in his strategy set, and repeating the same process amongst the remaining strategies in his strategy profile. One important idea that is considered in this process is that rationality among players is assumed to be common knowledge.
+
+\subsection{Common Knowledge of Rationality}
+Common knowledge implies that a belief is known to every player, and every player is aware that the other players are also in turn aware of the belief. Common knowledge of rationality is a subset of this concept, which means that it is common knowledge to all players of the game that everyone is rational. 
+
+This concept is what makes Iterated Deletion of Strictly Dominated Strategies possible, since every player A knows that the other players will not choose that strategy because the other players themselves know that player A himself will not choose that strategy courtesy the rationality of all players. 
+
+In simpler terms, Common Knowledge not only means that all the players know some information, but we are also sure of the fact that every player also knows that every other player knows that information.
+
+\subsection{Nash Equilibrium}
+The Nash Equilibrium is a concept formulated by the mathematician John Forbes Nash Jr. It is divided into two types, Pure Strategy Nash Equilibrium and Mixed Strategy Nash Equilibrium. 
+
+Informally, a strategy profile is a Nash Equilibrium if when given the strategies of the other players, one player cannot strictly increase his payoff by adjusting his own strategy. It is a sort of a stable state for all players. 
+
+A Pure Strategy Nash Equilibrium (PSNE) is mathematically represented in the following manner.
+
+\[
+u_{i}(s_i^*, s_{-i}^*) = \max_{s_i \in S_i}u_i(s_i, s_{-i}^*) \forall i = 1, 2, .., n
+\]
+
+A Mixed Strategy Nash Equilibrium (MSNE) is mathematically represented as follows, given a mixed strategy profile $(\sigma_1, \sigma_2, .., \sigma_n) \forall i$
+
+\[
+u_i(\sigma_i^*, \sigma_{-i}^*) \geq u_i(\sigma_i, \sigma_{-i}^*)
+\]
+
+In a way we can say that at a Nash equilibrium, each player is playing a \textit{best response strategy} to the strategies of all the other players. It is possible that in a finite game, there could be more than one Nash equilibrium. 
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale = 0.25]{nashwikip.jpg}
+\caption{John F. Nash Jr. \textit{credits: Wikipedia}}
+\label{nashwikip}
+\end{figure}
+
+\subsection{Pareto Optimality}
+The Pareto definition of a game is like a bird's eye scope of the entire game as it is played. If an outcome $O$ is at least as good as $O'$ for everyone, but strictly better for at least one player, then we say $O$ pareto-dominates $O'$.
+
+	For an outcome to be \textit{pareto-optimal} it doesn't have to pareto-dominate any other outcome, it just should not be pareto-dominated by any other outcome.
+	
+	Every game must have at least one pareto-optimal outcome because if every outcome is pareto dominated by the others then it makes no sense.
+	
+	Pareto-optimality is famously seen in the Prisoner's Dilemma because the Nash Equilibrium is the only outcome that isn't pareto-optimal.
+
+\newpage
+
+\section{Two Player Finite Games}
+Before moving on to further concepts, let us acquaint ourselves with the normal form and the basics of game theory with the following examples.
+
+\subsection{Example Game}
+Let's look at an application of iterative removal of strictly dominated strategies. 
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+1 \textbackslash 2 & a & b & c \\
+\hline
+A & 1, 1 & -2, 0 & 4, -1\\
+\hline
+B & 0, 3 & 3, 1 & 5, 4 \\
+\hline
+C & 1, 5 & 4, 2 & 6, 2\\
+\hline
+\end{tabular}
+\caption{(Another) arbitrary game}
+\label{table:ag1}
+\end{table}
+\bigskip
+
+
+In the given game, see that for player 1, strategy B is strictly dominated by strategy C. That is, no matter what strategy player 2 chooses, player 1 will always be better off choosing strategy C. Thus we can delete the strategy B.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+1 \textbackslash 2 & a & b & c \\
+\hline
+A & 1, 1 & -2, 0 & 4, -1\\
+\hline
+C & 1, 5 & 4, 2 & 6, 2\\
+\hline
+\end{tabular}
+\caption{Strategy B deleted}
+\label{table:ag2}
+\end{table}
+
+Now both players know that player 1 will never play B (by common knowledge) so we can delete the row of strategy B. For player 2, both strategies b and c are strictly dominated by strategy a. This would not be the case if strategy B for player 1 were still viable. Hence, delete strategies b and c.
+
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|}
+\hline
+1 \textbackslash 2 & a\\
+\hline
+A & 1, 1\\
+\hline
+C & 1, 5\\
+\hline
+\end{tabular}
+\caption{Strategies b and c deleted}
+\label{table:ag3}
+\end{table}
+
+Finally we remain with the strategy space \{A, C\} $\times$ \{a\}. A and C provide the same payoff for player 1 hence either can be chosen. However, (C,a) gives player 2 a better payoff. Since no player can do strictly better by changing their strategy this is a \textit{Weak Nash Equilibrium.}
+
+\textit{Note: The order in which strategies can be iteratively removed is insignificant. Try it out yourself.}
+
+\newpage
+
+\subsection{Going to the Movies}
+
+We shall see an example of an important theorem via this game.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale = 0.8]{cinema.jpg}
+\label{fig:cin}
+\end{figure}
+
+\begin{theorem}
+Every finite game has at least one Nash Equilibrium. (Nash, 1950)
+\end{theorem}
+
+There are three movies running at the cinemas, Shrek, Finding Nemo and Bee Movie. Two friends have agreed upon a movie date but forgot to finalise on a movie and now somehow cannot communicate with each other. The payoff matrix shows their payoffs for each of their strategy profiles.
+
+Right off the bat notice that for both players, Bee Movie is a strictly dominated and thus both players can delete it from both their strategy sets. We are left with Shrek and Nemo now. 
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+1 \textbackslash 2 & Shrek & Nemo & Bee \\
+\hline
+Shrek & 2, 1 & 0, 0 & 0, -1\\
+\hline
+Nemo & 0, 0 & 1, 2 & 0, -1 \\
+\hline
+Bee & -1, 0 & -1, 0 & -2, -2\\
+\hline
+\end{tabular}
+\caption{The Movies Game}
+\label{table:tmg}
+\end{table}
+
+There are no dominated strategies now and thus we cannot find the Pure Strategy Nash Equilibrium. However, we can attempt to find the Mixed Strategy Nash Equilibrium (MSNE).
+
+To find a MNSE, we assume that player 2 will choose Shrek with a probability (q) and Nemo with a probability (1-q). Thus, player 2 will choose a mixed strategy profile dependent on q such that player 1 will be indifferent towards either choice and will have equal expected utility from whichever of his strategy he picks. If this weren't the case, one pure strategy would dominate for player 1 and he would go for that strategy.
+
+Thus,
+
+\begin{center}
+2$\cdot$q + 0$\cdot$q = 0$\cdot$(1-q) + 1$\cdot$(1 – q)\\
+3q = 1\\
+q = 1/3\\
+\end{center}
+
+
+And for player 1 similarly set the probability of choosing Shrek to (p) and Nemo to (1-p). Similar calculations yield p = 2/3.
+
+Therefore, we get the Nash equilibrium for this game to be the mixed strategy profile \{(2/3, 1/3, 0), (1/3, 2/3, 0)\}.
+
+\newpage
+
+\subsection{The Hawk-Dove Game}
+
+Let us see the application of another theorem formulated by Nash in this game.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale = 0.25]{hawkdove.jpg}
+\label{fig:hd}
+\end{figure}
+\begin{theorem}
+For every finite symmetric game, there exists a symmetric Mixed Strategy Nash Equilibrium. (Nash, 1951)
+\end{theorem}
+
+In this \textit{symmetric} game there are two cars driven by our two players at full speed towards each other on an empty stretch of land. Before the cars impact, each player has a choice to either continue driving at full speed (Hawk or H) or to “chicken out” and swerve (Dove or D). This game is also known as the Chicken game for that reason.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+1 \textbackslash 2 & H & D \\
+\hline
+H & 0, 0 & 3, 1 \\
+\hline
+D & 1, 3 & 2, 2 \\
+\hline
+\end{tabular}
+\caption{The Hawk-Dove Game in normal form.}
+\label{table:hd}
+\end{table}
+
+Notice here that there are no strictly dominated strategies that we can exclude.
+
+Let us come up with the best responses for this game.
+
+\textit{Note: }BR(A) = B \textit{is read as "The best response to the belief that the other player will choose A is to choose B."}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|}
+\hline
+Player 1 & Player 2 \\
+\hline
+BR(H) = D & BR(H) = D \\
+\hline
+BR(D) = H & BR(D) = H\\
+\hline
+\end{tabular}
+\caption{Best responses to the Hawk-Dove game.}
+\label{table:hdbr}
+\end{table}
+
+This is a good time to mention a corollary of the Nash Equilibrium definition. A Nash Strategy Profile $s^*$ is one where $\forall i \in \{1, 2, 3 ... n\}$ we have $s_i \in BR(s_{-i})$.
+
+Thus we get two Nash Equilibria, namely (H, D) and (D, H). 
+
+But wait! Could there be another? Let us look for a mixed strategy Nash Equilibrium.
+
+Assume that player 2 adopts a mixed strategy (q, 1-q) such that payoffs from neither strategy of player 1 for player 1 exceed one another. 
+
+Thus,
+
+\begin{center}
+$u_1$(H) = $u_1$(D)\\
+0 + 3(1 - q) = q + 2(1 - q)\\
+3 – 3q = 2 - q\\
+2q = 1\\
+q = 1/2\\
+\end{center}
+
+Now assume that player 1 adopts a mixed strategy (p, 1-p). Similar calculations result in p = 1/2.
+
+There are \textit{three} Nash Equilibria for this game. The pure strategy profiles (H, D) and (D, H) and the mixed strategy profile \{(1/2, 1/2), (1/2, 1/2)\}.
+
+
+In 2004, Cheng et al. showed that every two-strategy symmetric game has a (not necessarily symmetric) Pure Strategy Nash Equilibrium. The proof is out of the scope of this report.
+
+\section{Extensive Form and Related Concepts}
+
+\subsection{Extensive Form Games}
+
+A suitable explanation for an extensive form game has already been given in section 2, under Representations of a Game Model. I will elaborate further on the tree form here.
+
+An extensive form game is represented by a tree. The tree consists of nodes, branches and terminal nodes (leaves). Written at each leaf is the payoffs for each of the players participating in the game. A path is one of the strategy profiles that can be employed in a game. It is called a path because it is continuous and unbroken in going through particular nodes.
+
+\begin{figure}[h!]
+\centering
+\begin{istgame}
+\setistgrowdirection'{0}
+\setistOvalNodeStyle{.6cm}
+\xtdistance{25mm}{25mm}
+\istroot(0)[initial node]{1}
+	\istb{Up}[above left]
+	\istb{Middle}[above]
+	\istb{Down}[below left]{(3,4)}
+	\endist
+\xtdistance{20mm}{15mm}
+\istroot(1)(0-1)<90>{2}
+	\istb{Left}[a]{(2,2)}
+	\istb{Right}[b]{(3,1)}
+	\endist
+\istroot(2)(0-2)<90>{2}
+	\istb{Left'}[a]{(5,4)}
+	\istb{Right'}[b]{(2,2)}
+	\endist
+
+\end{istgame}
+\caption{An example game in extensive form}
+\label{fig:extex}
+\end{figure}
+
+The essence of the Extensive Form representation of games lies not in the fact that it depicts the sequentiality of moves (i.e. time that each move is played) but that it makes clear \textit{how much information} a player has about his opponents' and his own previous moves.
+
+\subsubsection*{Perfect Information}
+
+\begin{definition}
+A game of perfect information is one in which at each node of the game, the player whose turn it is to move at that node, knows which node they are at. i.e. they must know the path that was followed to get them to that node.
+\end{definition}
+
+We shall also define and analyse Imperfect Information games later on in this section.
+
+\subsubsection*{Pure Strategies}
+
+\begin{definition}
+A pure strategy for player $i$ in a game of perfect information is a complete plan of action. It specifies which action $i$ will take at each of his/her decision nodes.
+\end{definition}
+
+In the example game shown above, we see that Player 1 has three pure strategies which are Up, Middle and Down. Player 2 on the other hand, has not two but \textit{four} pure strategies. These are (Left, Left'), (Left, Right'), (Right, Left') and (Right, Right').
+
+One would wonder- why define the strategies at both nodes for player 2 when we are not only certain that only one of them can be played, but also are uncertain whether \textit{either} will be reached (as in the case that player 1 selects Down)? The simple answer for this is that the play of a game must be thorough. We must know what decision a player would make should he/she be faced with the choice at that node.
+
+\subsubsection*{Normal Form Representation of an Extensive Form Game}
+
+It is possible for games originally represented in extensive form to be represented in the normal form. In the process, we lose the element of sequentiality and information available to the players.
+
+Let us take a general example game in the extensive form.
+
+\begin{figure}[h!]
+\centering
+\begin{istgame}
+\setistgrowdirection'{0}
+\setistOvalNodeStyle{.6cm}
+\xtdistance{20mm}{30mm}
+\istroot(0)[initial node]{1}
+	\istb{U}[above left]
+	\istb{D}[below left]
+	\endist
+\xtdistance{15mm}{10mm}
+\istroot(1)(0-1)<90>{2}
+	\istb{\ell}[al]{(4,2)}
+	\istb{c}[a]{(6, 3)}
+	\istb{r}[bl]{(2,5)}
+	\endist
+\istroot(2)(0-2)<90>{2}
+	\istb{a}[al]
+	\istb{b}[bl]{(1,7)}
+	\endist
+\istroot(3)(2-1)<90>{1}
+	\istb{u}[al]{(5,2)}
+	\istb{d}[bl]{(4,6)}
+	\endist
+
+\end{istgame}
+\caption{Another example game in extensive form}
+\label{fig:extex2}
+\end{figure}
+
+In order to convert this game to the normal form, we must first enumerate the pure strategies of each player.
+
+\begin{center}
+$S_1$ = \{(U,u), (D, u), (U, d), (D, d)\} \\
+$S_2$ = \{(l,a), (c,a), (r,a), (l,b), (c,b), (r,b)\}
+\end{center}
+
+The normal form for this game is as follows.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+1 \textbackslash 2 & la & ca & ra & lb & cb & rb \\
+\hline
+Uu & 4, 2 & 6, 3 & 2, 5 & 4, 2 & 6, 3 & 2, 5 \\
+\hline
+Du & 5, 2 & 5, 2 & 5, 2 & 1, 7 & 1, 7 & 1, 7 \\
+\hline
+Ud & 4, 2 & 6, 3 & 2, 5 & 4, 2 & 6, 3 & 2, 5 \\
+\hline
+Dd & 4, 6 & 4, 6 & 4, 6 & 1, 7 & 1, 7 & 1, 7 \\
+\hline
+\end{tabular}
+\caption{The same example, in normal form.}
+\label{table:nrexex}
+\end{table}
+
+\subsection{Backward Induction}
+
+One fine day in the forest, a sheep chanced upon the head of a group of tigers. This head tiger had to pick one of two choices, whether to eat the sheep or to let it go. The head tiger also knew that if he ate the sheep, he would go into a post-meal siesta, and this would leave him vulnerable to be eaten by the second strongest tiger, who could choose to eat the sleeping head and become the new head, or to stay put. The game continues as such, and stops only when a tiger chooses not to eat his higher-up.
+
+Say there are ten tigers in the group, including the head tiger. If we look at the very last or weakest tiger in the group, we observe that this tiger would be better off eating the second last tiger, as he has nothing to lose or in other words no one to eat him. The second last tiger notices this, and thinks that if he chose to eat the previous tiger, then the last tiger would eat him, simply because this group of tigers is blessed with the common knowledge of rationality. Thus the second last tiger decides not to eat. Observing this, the third last tiger (the eighth tiger) now figures that the second last tiger will not eat him, so he is better off eating the seventh tiger. This intuition continues among this unusually clever group of tigers until we come to the first tiger. 
+
+Tracking back from the last tiger, we notice that the decisions are eat, not eat, eat, not eat, eat, not eat, eat, not eat, eat, \textbf{not eat}. Thus, the first tiger decides not to eat the sheep, and the sheep prances off, unaware of how the intelligence of the tigers just saved its (and the head tiger's) life.\\
+
+Joel Watson in his text "Strategy: An Introduction to Game Theory" defines Backward Induction thusly,
+
+\begin{definition}
+{[Backward Induction is]} the process of analyzing a game from the end to the beginning. At each decision node, one strikes from consideration any actions that are dominated, given the terminal nodes that can be reached through the play of the actions identified at successor nodes.
+\end{definition}
+
+Backward induction is one of the most important tools in Game Theory, and is essential in deducing equilibrium in a sequential game.\\
+
+Let us see an arbitrary example of backward induction used in an extensive form game. The game is set in such a way that there is a business in town run by Player 2, and Player 1 would like to set up a business of his own. Player 1 must then decide whether he wants to set up a small or a large business. Observing this, Player 2 must choose whether she wants to fight Player 1's business out of the market or to stay silent. In case Player 2 fights, Player 1 must decide whether to retaliate or not.
+
+The game tree is as follows.
+
+\begin{figure}[h!]
+\centering
+\begin{istgame}[scale = 0.85]
+\setistgrowdirection'{0}
+\xtdistance{20mm}{30mm}
+\istroot(0)[initial node]{1}
+	\istb{S}[above left]
+	\istb[draw = blue, thick, ->]{L}[below left]
+	\endist
+\xtdistance{20mm}{15mm}
+\istroot(1)(0-1)<90>{2}
+	\istb[draw = blue, thick, ->]{F}[al]
+	\istb{NF}[bl]{(2,4)}
+	\endist
+\istroot(2)(0-2)<90>{2}
+	\istb[draw = blue, thick, ->]{f}[al]
+	\istb{nf}[bl]{(3,3)}
+	\endist
+\istroot(3)(1-1)<90>{1}
+	\istb{R}[al]{(0,2)}
+	\istb[draw = blue, thick, ->]{NR}[bl]{(1,5)}
+	\endist
+\istroot(4)(2-1)<90>{1}
+	\istb{r}[al]{(-1,1)}
+	\istb[draw = blue, thick, ->]{nr}[bl]{(2,4)}
+	\endist
+\end{istgame}
+\caption{A game of businesses. The payoffs are the profits (in millions).}
+\label{fig:bi}
+\end{figure}
+
+Start with the decision nodes at the very end of the tree. i.e. the nodes where Player 1 must decide whether to retaliate or not. Comparing the payoffs between retaliate and not retaliate, we can see that one of the choices per node (in this case, to not retaliate in both nodes) is the dominant strategy for Player 1 as he gets a higher payoff in that case.
+
+Tracking back from here, we come to the decision nodes for Player 2. Now, due to having common knowledge Player 2 knows that if she were to choose the option to fight, Player 1 would choose his dominant strategy, therefore the payoffs in the case Player 2 decides to fight is fixed. Player 2 again uses backward induction just like her counterpart did at his nodes, and picks the option that would best suit her rational preference for her own payoffs.
+
+Finally we come to the initial decision node for Player 1, and again he uses backward induction here to reason what decision he must take, being aware what actions will be taken in the future as have been rationally deduced by backward deduction. Thus, Player 1 decides to open a large business.
+
+You will notice that I have shaded some branches in the above tree in blue, and have arrowed them. These are the dominant strategies that have been decided by backward induction. The longest, continuous unbroken blue path is the final pure strategy profile that is the equilibrium in this game. This strategy profile is 
+
+\begin{center}
+s = (\{\textit{L}, $nr$\}, $f$)
+\end{center}
+
+%Might include the Duel Game here
+
+\subsubsection*{The Entrant-Incumbent Game}
+
+There is an established firm in the market, whom we shall call the Incumbent and another firm, referred to as the Entrant who has a choice of whether or not to enter this market. If the Entrant decides to enter the market, the Incumbent can decide if they want to fight the Entrant out of the market, or to accommodate them. The game tree is as follows, with the normal form representation beside it.
+
+\begin{figure}[h!]
+\centering
+\begin{minipage}{.5\textwidth}
+	\centering
+	\begin{istgame}
+	\setistgrowdirection'{0}
+	\xtdistance{20mm}{15mm}
+	\istroot(0)[initial node]{1}
+		\istb[draw = blue, thick, ->]{Enter}[above left]
+		\istb{Out}[below left]{(0,3)}
+		\endist
+	\xtdistance{20mm}{15mm}
+	\istroot(1)(0-1)<90>{2}
+		\istb{F}[above left]{(-1,0)}
+		\istb[draw = blue, thick, ->]{A}[below left]{(1,1)}
+		\endist
+	\end{istgame}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+	\centering
+	\begin{tabular}{|c|c|c|}
+	\hline
+	E \textbackslash I & F & A \\
+	\hline
+	Enter & -1, 0 & \underline{1}, \underline{1} \\
+	\hline
+	Out & \underline{0}, \underline{3} & 0, \underline{3} \\
+	\hline
+	\end{tabular}
+\end{minipage}
+\label{fig:enin}
+\end{figure}
+
+The dominant strategies via backward induction and the best responses in the normal form have been indicated via blue arrows and underlined payoffs respectively.
+
+The pure strategy equilibrium for this game via backward induction is (Enter, Accommodate). There exist two Nash equilibria for this game though, the strategy profiles being (Enter, Accommodate) and (Out, Fight).
+
+The second Nash Equilibrium can be explained as follows. Say that the Incumbent firm can threaten the Entrant firm saying that if he chooses to enter the market then the Incumbent will fight. This gives the Entrant caution to stay out. However, this is a non-credible threat because the Entrant knows that should he choose to enter the market, then the Incumbent's best response would be to accommodate him. Incumbent only gives the empty threat so that he can continue being the monopolistic entity in the market.
+
+One reason that the Incumbent could choose to follow up on his threat (as the Nash equilibrium depicts) is that he could do so just to set an example to deter the rest of the many Entrant firms that may be looking to enter the market in the future. This strategy is clearly seen in the Chain-store Paradox, where a "deterrence" strategy (to fight an entrant) is seen as more optimal than the strategy recommended by backward induction.
+
+\subsection{Imperfect Information Games}
+
+Games of imperfect information are those games where a player cannot ascertain which decision node he/she is at, since they have no prior information as to what decision the previous player picked at their decision node.
+
+The following is an example of an imperfect information game.
+
+\begin{figure}[h!]
+\centering
+\begin{istgame}
+\setistgrowdirection'{0}
+\setistOvalNodeStyle{.6cm}
+\xtdistance{20mm}{18mm}
+\istroot(0)[initial node]{1}
+	\istb{U}[above left]
+	\istb{M}[above]
+	\istb{D}[below left]
+	\endist
+\xtdistance{15mm}{10mm}
+\istroot(1)(0-1)<90>
+	\istb{u}[al]{(4,0)}
+	\istb{d}[bl]{(0,4)}
+	\endist
+\istroot(2)(0-2)<90>
+	\istb{a}[al]{(0,4)}
+	\istb{b}[bl]{(4,0)}
+	\endist
+\istroot(3)(0-3)<90>{2}
+	\istb{l}[al]{(1,2)}
+	\istb{r}[bl]{(0,0)}
+	\endist
+\xtInfoset(1)(2){2}[left]
+\end{istgame}
+\caption{An imperfect information game.}
+\label{fig:imperfect}
+\end{figure}
+
+Player 2 cannot tell whether Player 1 picked Up or Middle, but she knows if he picks Down. These two nodes that are connected by a dashed line are said to be in the same \textit{information set}.
+
+Player 1 does not know whether he should pick between Up or Middle, or choose Down. What he does know is that Player 2 cannot discern between his choice of Up or Middle, so in her best interest she will randomise between her own choices of up or down. Player 1 can also hence randomise between Up or Middle. This leaves Player 1 with an \textit{expected payoff} of
+\[
+\frac{1}{2}(\frac{1}{2}{\cdot}4 + 0) + \frac{1}{2}(0 + \frac{1}{2}{\cdot}4) = 2
+\]
+This expected payoff is larger than the payoff 1 that Player 1 obtains by choosing Down, hence Player 1 will randomise between Up and Middle. 
+
+\begin{definition}
+An \textit{information set} of player $i$ is a collection of player $i's$ nodes among which $i$ cannot distinguish.
+\end{definition}
+
+The following two types of imperfect information extensive form representations are illegal.
+
+\begin{figure}[h!]
+\centering
+\begin{minipage}{.5\textwidth}
+	\centering
+	\begin{istgame}
+	\setistgrowdirection'{0}
+	\xtdistance{12mm}{15mm}
+	\istroot(0)[initial node]{1}
+		\istb
+		\istb
+		\endist
+	\xtdistance{10mm}{8mm}
+	\istroot(1)(0-1)
+		\istb
+		\istb
+		\istb
+		\endist
+	\istroot(2)(0-2)
+		\istb
+		\istb
+		\endist
+	\xtInfoset(1)(2){2}[left]
+	\end{istgame}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+	\centering
+	\begin{istgame}
+	\setistgrowdirection'{0}
+	\xtdistance{12mm}{15mm}
+	\istroot(0)[initial node]{1}
+		\istb
+		\istb
+		\endist
+	\xtdistance{10mm}{8mm}
+	\istroot(1)(0-1)<90>{2}
+		\istb
+		\istb
+		\endist
+	\istroot(2)(0-2)<90>{2}
+		\istb
+		\istb
+		\endist
+	\xtdistance{10mm}{5mm}
+	\istroot(3)(1-2)
+		\istb
+		\istb
+		\endist
+	\istroot(4)(2-1)
+		\istb
+		\istb
+		\endist
+	\xtInfoset(3)(4){1}[left]
+	\end{istgame}
+\end{minipage}
+\label{fig:illegal}
+\caption{Illegal imperfect information representations}
+\end{figure}
+
+In the first case, there are different number of choices for player 2, and this is in violation of the definition of the information set definition.
+In the second case, Player 1 knows the choices that he himself made to reach his nodes. Thus, an imperfect information set for a player cannot be dependent on the choices that the same player made earlier on in the game.
+
+Let us look at another definition for Perfect Information, based on which we can define Imperfect Information games.
+
+\begin{definition}
+Perfect Information is a setting where all information sets in the tree contain just \textit{one} node.
+\end{definition}
+
+\begin{definition}
+Imperfect information games, formally, are those games which are not perfect information.
+\end{definition}
+
+Now that we are familiar with the intricacies of extensive form games, we can attempt to depict the Prisoner's Dilemma in an extensive form tree.
+
+\begin{figure}[h!]
+\centering
+\begin{minipage}{.5\textwidth}
+	\centering
+	\begin{istgame}
+	\setistgrowdirection'{0}
+	\xtdistance{15mm}{20mm}
+	\istroot(0)[initial node]{1}
+		\istb{Q}[above left]
+		\istb{S}[below left]
+		\endist
+	\xtdistance{20mm}{10mm}
+	\istroot(1)(0-1)<90>
+		\istb{Q}[above left]{(-1,-1)}
+		\istb{S}[below left]{(-10,0)}
+		\endist
+	\istroot(2)(0-2)<90>
+		\istb{Q}[above left]{(0,-10)}
+		\istb{S}[below left]{(-3,-3)}
+		\endist
+	\xtInfoset(1)(2){2}[left]
+	\end{istgame}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+	\centering
+	\begin{tabular}{|c|c|c|}
+		\hline
+		1\textbackslash 2 & Q & S \\
+		\hline
+		Q & -1, -1 & -10, 0 \\
+		\hline
+		S & 0, -10 & -3, -3 \\
+		\hline
+	\end{tabular}
+\end{minipage}
+\label{fig:expris}
+\caption{The prisoner's dilemma.}
+\end{figure}
+
+\subsection{Subgame Perfect Equilibrium}
+
+\begin{definition}
+A \textbf{subgame} is a part of a game that looks like a game within the tree.\\
+It satisfies the following properties.
+\begin{enumerate}
+\item It must start from a \textit{single} node.
+\item It comprises \textit{all successors} to that node.
+\item It \textit{does not} break up any information sets.
+\end{enumerate}
+\end{definition}
+
+Subgame perfect equilibrium is a concept that solves the confusion caused in an extensive form game when the Best Response strategy from normal form and the Backward Induction strategy from extensive form clash to give different notions of equilibria. It combines the two strategies (Best Response and Backward Induction) to give a single equilibria that is \textit{subgame perfect}. This means that the equilibrium holds \textit{for all} subgames within the main game. 
+
+\begin{definition}
+A Nash Equilibrium ($s_1^*$, $s_2^*$, $...$, $s_n^*$) is a \textit{Subgame Perfect Equilibrium} if it induces a Nash Equilibrium in every subgame of the game.
+\end{definition}
+
+Let us take an example game.
+
+\begin{figure}[h!]
+\centering
+\begin{minipage}{.5\textwidth}
+	\centering
+	\begin{istgame}
+	\setistgrowdirection'{0}
+	\xtdistance{15mm}{20mm}
+	\istroot(0)[initial node]{1}
+		\istb{U}[above left]
+		\istb{D}[below left]
+		\endist
+	\xtdistance{20mm}{10mm}
+	\istroot(1)(0-1)<90>
+		\istb{\ell}[above left]{(3, 1)}
+		\istb{r}[below left]
+		\endist
+	\istroot(2)(0-2)<90>
+		\istb{\ell}[above left]{(0,0)}
+		\istb{r}[below left]{(1,3)}
+		\endist
+	\istroot(3)(1-2)<90>{1}
+		\istb{u}[above left]{(0,0)}
+		\istb{d}[below left]{(1, 4)}
+		\endist
+	\xtInfoset(1)(2){2}[left]
+	\end{istgame}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+	\centering
+	\begin{tabular}{|c|c|c|}
+		\hline
+		1\textbackslash 2 & l & r \\
+		\hline
+		Uu & \underline{3}, \underline{1} & 0, 0 \\
+		\hline
+		Ud & \underline{3}, 1 & 1, \underline{4} \\
+		\hline
+		Du & 0, 0 & \underline{1}, \underline{3} \\
+		\hline
+		Dd & 0, 0 & \underline{1}, \underline{3} \\
+		\hline
+	\end{tabular}
+\end{minipage}
+\label{fig:expsub}
+\caption{Subgame perfect equilibrium.}
+\end{figure}
+
+From the normal form, we get the Nash Equilibria of the game to be the following.
+\begin{center}
+NE: (\{U,u\},$\ell$) \& (\{D,u\}, r) \& (\{D,d\}, r)
+\end{center}
+
+Observe that there are two (valid) subgames in this game. The first one is the entire game, and the second one consists of Player 1's second decision node. 
+At the second subgame, the only valid Nash Equilibrium is (d) or down. Hence, from the overall Nash Equilibria we can discard all the strategy profiles which include the choice of up. We are left with one final equilibrium, which is 
+\begin{center}
+SPE: (\{D,d\}, r)
+\end{center}
+
+
+\section{Repeated Games}
+
+Most interactions in society do not or cannot rely on contracts to ensure cooperation. In a friendship there is no written rule that if one friend is nice to the other, then the other friend must reciprocate. The reason most alliances, relationships or friendships succeed is due to repeated interactions. In ongoing relationships, the promise of future rewards and the threat of future punishments may sometimes provide incentives for good behaviour today. The base game that is repeated is called the \textit{stage game}.
+
+\subsection{Finitely Repeated Games}
+
+In repeated games with finite number of interactions, one would find that the last iteration of the game becomes a one-shot game, because the payoffs of that game have no effect on the future. Thus, it is only sensible to play the Nash Equilibrium at this game. This is only valid if there is a unique Nash Equilibrium in the stage game. Since the Nash Equilibrium is being played eventually, it makes sense to also play the Nash Equilibrium at the second last iteration, and the third last and so on, as an outcome of Backward Induction. Thus a unique subgame perfect equilibrium is found for the game. 
+
+Of course, if the stage game contains more than one Nash Equilibrium, the repeated game may have multiple subgame perfect equilibria. This means that although one of the many Nash Equilibria will be played eventually, the existence of multiple Nash Equilibria introduces the possibility of punishment and reward strategies that can help deviate from the Nash Equilibria of the stage game in the initial rounds.
+
+The "Lame Duck" issue is commonly seen in instances where a person knows that they are close to retirement. This situation is a finitely repeated game in the sense that they must show up to work every day for a finite number of days until their retirement. Since they know that shirking off on the final day has no implications upon their future, the same logic applies and decide to shirk off until their retirement. This is of course seen much less ideally in the real world but is certainly observed to a significant extent.
+
+\subsection{Infinitely Repeated Games}
+
+Infinitely repeated games are the more widely studied form of repeated games since they cannot be solved with backward induction. This is because they have no last "stage" to track backwards from. 
+
+In the iterated prisoner's dilemma, it is found to be beneficial to play the cooperative strategy which is socially optimum (grants higher payoffs for both players). An important part of strategies in infinitely repeated games is punishing players who deviate from this cooperative strategy. A player might choose to change his strategy to one that will overall benefit him and harm the other player's payoffs. In response to this, the other player can decide to also change their strategy to one which will lead to reduced payoffs for both players for the rest of the game. This is known as a \textit{trigger strategy}. In the prisoner's dilemma, this trigger strategy is both players defecting. The trigger strategy will continue to be played until the first player is forced into cooperating again.
+
+One key concept in infinitely repeated games is the discount factor, denoted by $\delta$. The discount factor $0< \delta < 1$ is multiplied to the payoffs gained per game that corresponds to the worth that the player associates to the value of the payoff of that game in the future. Say a player gains a payoff of $u_i(x_t)$ from a game played $t$ stages in the future, then the actual payoff for that player will be $\delta^t{\cdot}u_i(x_t)$. The total payoff for a player $i$ from an infinitely repeated game with $t$ denoting the stage being played, considering a discount factor of $\delta$ is $$U_i = \sum_{t>0}{\delta^t{\cdot}u_i(x_t)}$$ 
+
+\subsubsection*{Folk Theorems}
+
+The Folk Theorems are a class of well knows theorems that state that there is an abundance of Nash Equilibrium payoff profiles in repeated games. This set of theorems is called such because it was widely known among game theorists in the 1950's even though no one had formally published it. They state that virtually any average payoff is possible in repeated interactions by patient ($\delta\rightarrow{1}$) players given that the strategies are feasible and individually rational.
+
+\textbf{Individual rationality} means that the average payoff incurred in the Nash Equilibrium must be at least as much as the payoff gained in the case where the player minimises the others' payoffs while trying to maximise his own (minmax strategy). This is so that the player does not have incentive to deviate and play his minmax strategy at every step of the game. 
+
+\textbf{Feasibility} only means that the average payoff must be within the bounds of the possible payoff profiles of the stage game. This is because it is the weighted average of payoffs in the basic games.
+
+Two applications of the folk theorem in real life are as follows.
+\begin{itemize}
+\item In anthropology, it is observed that when members of a community know that they will have to deal with one another, patterns of behaviour can be maintained through social norms and traditions so long as the members are better off staying in the community rather than living on their own (the minmax condition).
+\item In world politics, most agreements between countries cannot be enforced, but are generally followed because they know that they have to deal with each other for the foreseeable future. Countries with low discount factor values (low patience) can opt to use minmax strategies and this will make it difficult to punish that country.
+\end{itemize}
+
+\section{Evolutionary Game Theory}
+
+Evolutionary Game Theory was pioneered by R. A. Fisher to explain the approximate equality of the sex ratio in mammals. It was further built upon by Maynard Smith in association with Fisher, and largely dealt with biological aspects. Of late, it has become of considerable interest to economics, sociologists, anthropologists and philosophers. 
+
+Evolutionary game theory seeks to study the concept of an evolutionarily stable strategy (ESS) and the properties of evolutionary dynamics in a model where frequency of strategies change in a population.
+
+We take a simplified model (not bio-accurate) which assumes the following postulates.
+\begin{itemize}
+\itemsep0em
+\item Competition occurs within species.
+\item The game being played is symmetric, 2-player.
+\item The population is quite large, and random matching occurs with a focus on average payoffs.
+\item Relatively successful strategies will grow, and failed strategies will weaken and disappear.
+\item There is no gene redistribution, i.e. reproduction is asexual.
+\end{itemize}
+
+Assume there is a population of beetles. Some beetles in this populations are of small size, and the rest of the beetles are significantly larger. When two beetles compete over some food, the outcomes are as such.
+\begin{itemize}
+\itemsep0em
+\item If beetles of similar size compete, then they equally split the food.
+\item If a small beetle faces off against a larger beetle, most of the food goes to the larger beetle.
+\item In all the cases, large beetles get a slightly lower payoff since some of the food is used up in maintaining their hungry metabolism.
+\end{itemize}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+1\textbackslash 2 & Small & Large \\
+\hline
+Small & 5, 5 & 1, 8 \\
+\hline
+Large & 8, 1 & 3, 3 \\
+\hline
+\end{tabular}
+\caption{The Beetle Game}
+\label{table:tbg}
+\end{table}
+
+As is stated, the population is large enough that one beetle will not be paired with another particular beetle repeatedly. A beetle's overall payoff will be equal to the average of payoffs it incurs in its interactions with other beetles, and this decides its reproductive success into the next generation.
+
+In this setting, we say that a given strategy is evolutionarily stable if, when the whole population is using this strategy, any small group of invaders using a different strategy will eventually die off over multiple generations. (We can think of these invaders either as migrants who move to join the population, or as mutants who were born with the new behaviour directly into the population.) We capture this idea in terms of numerical payoffs by saying that when the whole population is using a strategy S, then a small group of invaders using any alternate strategy T should have strictly lower fitness than the users of the majority strategy S. Since fitness translates directly to evolutionary success, those individuals who have lower average fitness will eventually die off. 
+
+More formally, this can be stated as follows.
+\begin{itemize}
+\itemsep0em
+\item We say the fitness of an organism in a population is the expected payoff it receives from an interaction with a random member of the population.
+\item We say that a strategy T invades a strategy S at level $\epsilon$, for some small positive number $\epsilon$, if an $\epsilon$ fraction of the underlying population uses T and a 1 − $\epsilon$ fraction of the underlying population uses S.
+\item Finally, we say that a strategy S is evolutionarily stable if there is a (small) positive number $\epsilon'$ such that when any other strategy T invades S at any level $\epsilon$ $<$ $\epsilon'$, the fitness of an organism playing S is strictly greater than the fitness of an organism playing T .
+\end{itemize}
+
+
+Say that this population is made up of all Small beetles. This is the strategy S. Now, a small group (size $\epsilon$) of large beetles (strategy T) has invaded this population. This population now consists of 1 - $\epsilon$ Small beetles and $\epsilon$ Large beetles. Let $Au_1$ be the average payoff for a Small beetle, and $Au_2$ be the average payoff for a large beetle. 
+\begin{align}
+Au_1(S,\ (1-\epsilon)S + {\epsilon}T) &= (1-\epsilon){\cdot}5 + \epsilon{\cdot}1 \nonumber \\
+& = 5 - 4{\cdot}\epsilon \nonumber
+\end{align}
+\begin{align}
+Au_2(T,\ (1-\epsilon)S + {\epsilon}T) &= (1-\epsilon){\cdot}8 + \epsilon{\cdot}3 \nonumber \\
+& = 8 - 5{\cdot}\epsilon \nonumber
+\end{align}
+\begin{center}
+$Au_2$ $>$ $Au_1$ \\
+Hence Small is not evolutionarily stable.
+\end{center}
+
+Let's claim that Large is the evolutionary strategy. Assume now that the roles are reversed, Large makes up most of the population and Small beetles are the invaders. Large is still denoted by T while Small is still denoted by S.
+
+\begin{align}
+Au_1(S,\ (1-\epsilon)T + {\epsilon}S) &= (1-\epsilon){\cdot}1 + \epsilon{\cdot}5 \nonumber \\
+& = 1 + 4{\cdot}\epsilon \nonumber
+\end{align}
+\begin{align}
+Au_2(T,\ (1-\epsilon)T + {\epsilon}S) &= (1-\epsilon){\cdot}5 + \epsilon{\cdot}8 \nonumber \\
+& = 5 + 3{\cdot}\epsilon \nonumber
+\end{align}
+\begin{center}
+$Au_2$ $>$ $Au_1$ \\
+Hence Large is evolutionarily stable.
+\end{center}
+
+In conclusion, we have worked out that Large is the evolutionarily stable strategy for this population.
+
+Here I will take the liberty to state an important result, whose proof is out of the scope of this report. 
+\begin{remark}
+If a strategy is not a Nash Equilibrium, i.e (S, S) is not Nash Equilibrium then it is not necessary that S is an evolutionarily stable strategy. However, for a strategy to be an ESS, it must be a Nash Equilibrium for that game.
+\end{remark}
+
+I shall end this section with a formal definition of Evolutionary Stability by Maynard Smith.
+\begin{definition}
+In a symmetric 2-player game, the pure strategy S is Evolutionarily Stable if there exists an $\epsilon'$ $>$ 0 such that 
+\[
+(1-\epsilon)u(S,S) + (\epsilon)u(S,T) > (1-\epsilon)u(T,S) + (\epsilon)u(T,T) 
+\]
+\begin{center}
+$\forall$ possible deviations T and mutation sizes $\epsilon$ $<$ $\epsilon'$
+\end{center}
+\end{definition}
+
+\section{Behavioural Game Theory}
+
+Behavioural Game Theory is the practical, experiment based research branch of Game Theory which studies how certain models work out in real life. This concise section will deal mostly with how Game Theory ties in with the ethical nature of humans in real applications. It has been noticed in many instances that when games that are classically discussed in game theory are played out in real life between real human players, the results are somewhat varied from what is expected using the widely accepted methods such as best responses and backward induction. Humans in general tend to be more trusting, more generous, more benevolent and in general, more fair.
+
+\subsection{Prisoner's Dilemma}
+
+One of the interesting experiments where the thought experiment of the Prisoner's Dilemma is played out in real life is that a good number of players actually choose to cooperate instead of picking the Nash strategy of defection. This is because the players have an implicit trust in the other player so that they will facilitate an overall favourable outcome. This experiment was carried out by two economists from the University of Hamburg in 2013, and the results can be found \href{https://www.sciencedirect.com/science/article/abs/pii/S0167268113001522}{\textcolor{blue}{\underline{here.}}}
+
+\subsection{Centipede Game}
+
+In this game, both players are rewarded for cooperation, as the collective payoff increases steadily as the rounds progress. If both players cooperate throughout then they reach the pareto-optimal outcome at the very end. 
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale = 1]{centipede.png}
+\caption{The centipede game.}
+\label{fig:cent}
+\end{figure}
+
+The obvious strategy to use here would be backward induction. At the very last node, Player 2 would be better off choosing $d$ at the very last node. Player 1 notices this and decides to choose $D$ at the second last node. Continuing this through the tree, we come to the conclusion that Player 1's equilibrium is to select $D$ at the first node, effectively ending the game as soon as it started. This equilibrium is also subgame perfect.
+
+However, in many empirical studies it is noted that players choose to play the game for a few rounds before choosing to exit the game. Many economists have studied this game in the past, the reason of interest being the divide between the analysis outcome and the real world outcome. Rosenthal (1981) and Nagel and Tang (1998) suggest that the suitable strategy is to forego the forfeit at the initial round to judge whether your opponent is selfish or an altruist, and continue from thereon. One major risk with this is that Player 2 could choose to defect at her first node and this would leave Player 1 with a payoff of zero. This highlights the striking fact of this game, that the first outcome of (1,0) is pareto-dominated by all other outcomes \textit{except} the second outcome of (0,2).
+
+\subsection{Keynesian Beauty Contest}
+
+The Keynesian Beauty Contest is a game formulated by John Maynard Keynes in his work The General Theory of Employment, Interest and Money (1936). Originally drafted for price fluctuations in equity markets modeled upon the newspaper beauty contest voting system, the gist of the game described below was first invented by Alain Ledoux in 1981.
+
+Guess a number from zero to 100, with the goal of making your guess as close as possible to two-thirds of the average guess of all those participating in the contest.
+
+All values above 67 will be deleted, because there is no way that 2/3rds of the average will exceed this value and thus they are strictly dominated by all values below 67. The value 67 itself is a weakly dominated strategy only assuming everyone chooses 100. Since everyone knows this, they will refrain from choosing values above 67. This will bring the maximum highest possible 2/3rds average further down to 45, and subsequently 30, and 20 and so on. This is an example of iterative deletion of strictly dominated strategies. Ultimately the only viable equilibrium strategy would be to pick 1. 
+
+This game was played in the Danish newspaper Politiken in the year 2005. The winning strategy came out to be 21.6, where some of the players did end up guessing close to 100 but most of the guesses hovered around 33.3 (2/3rd of 50). This game was also played in Lecture 1 of the ECON 159 class taught by Prof. Ben Polak at Yale in 2007 and the winning result was 9. Upon playing the game again (after analysing it) the average steadily dropped even closer to the equilibrium of 1.
+
+\subsection{The Bargaining Game}
+
+This is a relatively simple one-shot game, where both players are handed a pool of money, say 10 coins. The player who goes first (let it be Player 1) splits the money into two parts, one part for himself and the other for Player 2. Player 2 can choose to accept this offer or reject it. If she accepts the offer then both players get the payoffs as divided. If she rejects, then the pool is taken away and the players leave no better off than when they started. 
+
+This is a sequential game, and the Nash Equilibrium (which is also subgame perfect) would be for Player 1 to divide the pool unfairly in his favour and for Player 2 to accept no matter what the division. However, this is not commonly seen in real life. Player 2 has an additional psychological payoff of pride, which becomes significant when the payoffs are at least equal if not in her favour. Player 1 knows this and accordingly must decide the payoffs in such a way that he is sure Player 2 will accept. The reason for this is distributional justice between the players.
+
+\section{The Aspect of Discussion - A Case Study}
+
+In this section I take a closer look at one of the scenes from an episode of the game show Golden Balls, which was broadcasted in the UK from 2007-2009. This particular game is known as Split or Steal. The clip for this scene can be found on YouTube at this link. \href{https://www.youtube.com/watch?v=S0qjK3TWZE8}{\textcolor{blue}{\underline{Split or Steal.}}}
+
+\begin{itemize}
+\item[] Contestants (Players): Nick and Ibrahim
+\item[] Total prize money involved: 13600 GBP
+\end{itemize}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+Nick \textbackslash Ib & Split & Steal \\
+\hline
+Split & 6800, 6800 & \underline{0}, \underline{13600} \\
+\hline
+Steal & \underline{13600}, \underline{0} & \underline{0}, \underline{0} \\
+\hline
+\end{tabular}
+\caption{The payoff matrix for the game. Underlined are the best responses for both players.}
+\label{table:ss}
+\end{table}
+
+Nick and Ibrahim have both accumulated a sum of 13600 GBP from the game show. They were each given a choice of whether to split or to steal with the payoffs as described in the matrix above. More importantly, they were also given time to talk out their strategies before making a choice.
+
+\subsection{Pre-game Analysis}
+Before we discuss what they talked out, allow me to point out that for Nick and Ibrahim both, Split is the weakly dominated strategy. This means that the Weak Nash Equilibrium for this game is all strategies except (Split, Split). Notice how the payoff of (Steal, Steal) is Pareto dominated by the outcome if the strategy profile were (Split, Split) where the payoff in that case would be (6800, 6800).
+
+\subsection{The Discussion That Occurred}
+Now when the discussions started, Nick promised Ibrahim that he would pick Steal, and asked Ibrahim to pick Split so that Nick would get all the money, and then Nick gave Ibrahim his word that he would split the money with him after the game show got over. Ibrahim did not believe Nick and his counter argument was that Ibrahim himself would pick Split and Nick should also pick Split so that they would end the game with half the money according to the rules of the game, since Nick’s promise of splitting the money himself was not legally binding. Nick did not listen to this and reiterated that he would still pick Steal no matter what. 
+
+\subsection{The Outcome of the Game}
+Nick went against his promise and picked Split, as did Ibrahim who also picked Split. This ensured them each a half split of the winnings according to the rules of the game.
+
+\subsection{Our Discussion}
+When Nick promised Ibrahim that he would pick Steal, he left Ibrahim in a situation where, if he picked Steal then both contestants would leave with nothing, but if he picked Split then Nick would catch all the earnings of the game and thus Ibrahim would have to trust that Nick would split the earnings with him. This creates a sort of meta-game outside the established game and changes the playoff matrix in the following way.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+Nick \textbackslash Ib & Split & Steal \\
+\hline
+Split & 6800, 6800 & 0, 13600 \\
+\hline
+Steal & \shortstack{6800, 6800 \\ \small{(If Nick keeps his word)}} & 0, 0 \\
+\hline
+\end{tabular}
+\caption{The modified payoff matrix.}
+\label{table:ss1}
+\end{table}
+
+Thus, this incentivises Ibrahim to pick the Split option as now he has a better payoff but only dependant on his trust in Nick. One more thing to add here is that even if Nick picked Split (as he did eventually), both would end up with a half split. Psychologically and somewhat compromisingly, it was better for Ibrahim to pick Split than Steal, even though at this point Steal was still his weakly dominant strategy.
+
+On the other hand, Ibrahim rebuking Nick’s proposal with persuading Nick to pick Steal left the game as it was, but now it created a factor of Nick’s trust in Ibrahim.
+	
+Either way as it is, Ibrahim was convinced that Nick would pick Steal, and this left him with no choice but to Split himself and trust Nick, or to Steal and have both win nothing (if Nick kept his word of picking steal).
+	
+As it ended up, Nick and Ibrahim both ended up picking Split and thus winning half earnings fairly as the game would dictate. One could state here that Ibrahim could have thought one step ahead of his opponent and taken his chance at Stealing and winning all the earnings to himself, but he was comfortable with the option of trusting Nick and splitting outside the game, oblivious to the fact that Nick could defect and they both win half winnings fairly.
+
+\section{Conclusion}
+I trust that through this report I have been able to enlighten you, the reader to a certain extent on the beautiful subject of Game Theory. I shall make use of this section to recap the topics that I have covered in the entirety of this document.
+
+We started with a comprehensive glance at the general terminology employed in Game Theory, starting with the Normal Form and Nash Equilibrium and later incorporating information and sequentiality into the mix with the Extensive Form representation. Right after this we studied the cases where games are not played once but repeated many times, finitely or uncountably. We also looked at Evolutionary Game Theory and Behavioural Game Theory as branches of the general subject and closed with an interesting real life example of a 2 player binary decision game with prior discussion between players.
+
+Every journey of a thousand miles begins with a single step, but this journey of several thousand words started with a single Google search: "What is game theory?". My intention through this report was to learn as much as I could about this subject, and document it for the clear understanding of myself and others. Although I had some basic knowledge of this field I realise now that I was quite unfamiliar with this vast field of study. I have tried my best to document whatever I learned in the past two months as much as possible in this report, save for a few concepts that I decided were better off not being mentioned for the sake of conciseness and clarity. I hope that this report has inspired you to learn more, and that you will run into those very topics in your further study in this subject. 
+
+\section{References}
+
+The following resources have been indispensable to my research and in preparing this report.
+\begin{enumerate}
+\item Myerson R. B. (1997). \textit{Game Theory- Analysis of Conflict. Harvard University Press.}
+\item Watson, J (2002). \textit{Strategy: An Introduction to Game Theory}. W. W. Norton and Company
+\item Notes and Lectures from the Open Yale Course ECON 159 by Professor Benjamin Polak.
+\item The Istgame package by In-Sung Cho, for the extensive form trees in this report.\\ \textit{https://ctan.org/tex-archive/graphics/pgf/contrib/istgame?lang=en}
+\item Easley, D and Kleinberg, J (2010) \textit{Networks, Crowds, and Markets:Reasoning about a Highly Connected World. Cambridge University Press.}
+\item Stanford Encyclopaedia of Philosophy\\ \textit{https://plato.stanford.edu/}
+\item Wikipedia, The Free Encyclopedia\\ \textit{https://en.wikipedia.org/}
+
+\end{enumerate}
+
+\end{document}
